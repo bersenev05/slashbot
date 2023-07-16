@@ -1,7 +1,7 @@
 from aiogram import Bot, Dispatcher, types
 from aiogram import executor
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 peoples_id=[]
 
@@ -13,6 +13,10 @@ kb1=InlineKeyboardMarkup(row_width=1)
 btn1=InlineKeyboardButton(text="Группа Вконтакте",
                           url="https://vk.com/slashdigitalru")
 kb1.add(btn1)
+
+rkb=ReplyKeyboardMarkup(resize_keyboard=True)
+rbtn1=KeyboardButton("/reklama")
+rkb.add(rbtn1)
 
 @dp.message_handler(commands="reklama")
 async def reklama(message: types.Message):
@@ -37,10 +41,14 @@ async def reklama(message: types.Message):
 
 @dp.message_handler(commands=["start"])
 async def scam(message: types.Message):
+
+    if message.from_user.id == 5965231899:
+        await message.answer(text="<code>[вы админ]</code>",reply_markup=rkb)
+
     await message.answer("Поздравляю, вы стали жертвой партизанского маркетинга!")
     await bot.send_message(chat_id="5965231899",text=f"+1 вход @{message.from_user.username}\n")
-    if ("@"+message.from_user.username, message.from_user.id) not in peoples_id:
-        peoples_id.append(("@"+message.from_user.username, message.from_user.id))
+    # if ("@"+message.from_user.username, message.from_user.id) not in peoples_id:
+    peoples_id.append(("@"+message.from_user.username, message.from_user.id))
 
 
 @dp.message_handler(commands=["info"])
@@ -48,6 +56,12 @@ async def info(message: types.Message):
     for id in range(len(peoples_id)):
         await message.answer(text=f"{id+1}  =  {peoples_id[id][0]}")
 
+
+@dp.message_handler(commands=["clear"])
+async def clear(message: types.Message):
+    global peoples_id
+    peoples_id=[]
+    await message.answer("DONE")
 
 
 @dp.message_handler()
@@ -65,5 +79,6 @@ async def golosboga(message: types.Message):
                                   f"{stroka}\n"
                                   f"<code>[видно только вам]</code>")
 
+
 if __name__=="__main__":
-    executor.start_polling(dp,skip_updates=True)
+    executor.start_polling(dp)
