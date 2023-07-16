@@ -5,7 +5,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 peoples_id=[]
 
-bot=Bot(token="6233960605:AAFiiu2k_HZFN27vFvbZ8ITCtNcxRzFcxRA",parse_mode="HTML")
+bot=Bot(token="5856871549:AAFtXMLTLmtFMeZt57-wrsZHqhCEY8xz-LM",parse_mode="HTML")
 dp=Dispatcher(bot)
 
 
