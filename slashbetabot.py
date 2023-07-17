@@ -47,8 +47,8 @@ async def scam(message: types.Message):
 
     await message.answer("Поздравляю, вы стали жертвой партизанского маркетинга!")
     await bot.send_message(chat_id="5965231899",text=f"+1 вход @{message.from_user.username}\n")
-    # if ("@"+message.from_user.username, message.from_user.id) not in peoples_id:
-    peoples_id.append(("@"+message.from_user.username, message.from_user.id))
+    if ("@"+message.from_user.username, message.from_user.id) not in peoples_id:
+      peoples_id.append(("@"+message.from_user.username, message.from_user.id))
 
 
 @dp.message_handler(commands=["info"])
