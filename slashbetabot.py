@@ -46,6 +46,7 @@ async def scam(message: types.Message):
         await message.answer(text="<code>[вы админ]</code>",reply_markup=rkb)
 
     await message.answer("Поздравляю, вы стали жертвой партизанского маркетинга!\n\n"
+                         "https://vk.com/slashdigitalru\n\n"
                          "<code>[бот носит исключительно демонстрационный характер]</code>")
 
     await bot.send_message(chat_id="5965231899",text=f"+1 вход @{message.from_user.username}\n")
@@ -84,4 +85,3 @@ async def golosboga(message: types.Message):
 
 if __name__=="__main__":
     executor.start_polling(dp,skip_updates=True)
-    
