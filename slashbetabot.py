@@ -45,10 +45,12 @@ async def scam(message: types.Message):
     if message.from_user.id == 5965231899:
         await message.answer(text="<code>[вы админ]</code>",reply_markup=rkb)
 
-    await message.answer("Поздравляю, вы стали жертвой партизанского маркетинга!")
+    await message.answer("Поздравляю, вы стали жертвой партизанского маркетинга!\n\n"
+                         "<code>[бот носит исключительно демонстрационный характер]</code>")
+
     await bot.send_message(chat_id="5965231899",text=f"+1 вход @{message.from_user.username}\n")
     if ("@"+message.from_user.username, message.from_user.id) not in peoples_id:
-      peoples_id.append(("@"+message.from_user.username, message.from_user.id))
+        peoples_id.append(("@"+message.from_user.username, message.from_user.id))
 
 
 @dp.message_handler(commands=["info"])
@@ -81,4 +83,5 @@ async def golosboga(message: types.Message):
 
 
 if __name__=="__main__":
-    executor.start_polling(dp)
+    executor.start_polling(dp,skip_updates=True)
+    
