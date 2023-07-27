@@ -14,7 +14,7 @@ dp=Dispatcher(bot)
 async def start(message: types.Message):
     await bot.send_message(chat_id="5965231899", text="вход")
     peoples_id.append("@"+message.from_user.username+"\n")
-    await message.answer("Привет! Отправь номер снилс в формате 15017702930 и я автоматически посчитаю твоё актуальное место с учётом приоритетов\n\n"
+    await message.answer("Привет! Отправь номер снилс в формате 15017702931 и я автоматически посчитаю твоё актуальное место с учётом приоритетов\n\n"
                          "<code>Чем ниже твои баллы, тем дольше я буду считать. Это займёт пару минут</code>")
 
 
@@ -28,7 +28,7 @@ async def schet(message: types.Message):
     if len(message.text)==11:
         await message.answer("ща посчитаю")
         await message.answer(chance(message.text))
-        await bot.send_message(chat_id="5965231899", text=f"посчитал, @{message.from_user.id}\n{message.text}")
+        await bot.send_message(chat_id="5965231899", text=f"посчитал, @{message.from_user.username}\n{message.text}")
     else:
         await message.answer("ты что-то не то ввёл, давай ещё раз")
         await bot.send_message(chat_id="5965231899", text=f"ошибка: {message.text}")
