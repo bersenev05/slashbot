@@ -2,85 +2,32 @@ from aiogram import Bot, Dispatcher, types
 from aiogram import executor
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from fnmatch import fnmatch
+from functionfile import chance
 
 peoples_id=[]
 
-bot=Bot(token="5856871549:AAFtXMLTLmtFMeZt57-wrsZHqhCEY8xz-LM",parse_mode="HTML")
+bot=Bot("6233960605:AAFiiu2k_HZFN27vFvbZ8ITCtNcxRzFcxRA",parse_mode="HTML")
 dp=Dispatcher(bot)
 
-
-kb1=InlineKeyboardMarkup(row_width=1)
-btn1=InlineKeyboardButton(text="Группа Вконтакте",
-                          url="https://vk.com/slashdigitalru")
-kb1.add(btn1)
-
-rkb=ReplyKeyboardMarkup(resize_keyboard=True)
-rbtn1=KeyboardButton("/reklama")
-rkb.add(rbtn1)
-
-@dp.message_handler(commands="reklama")
-async def reklama(message: types.Message):
-
-    stroka = ""
-    for i in peoples_id:
-        stroka += i[0] + "\n"
-
-    for id2 in range(len(peoples_id)):
-        photo = open("bitva.png", "rb")
-        await bot.send_photo(chat_id=peoples_id[id2][1],photo=photo,caption="Привет! На связи <b>SlashDigital</b> <code>{слэш диджитал}</code>\n\n"
-                             "Мы занимаемся созданием сайтов, телеграмм ботов и дизайном социальных медиа\n\n"
-                             "Дарим скидку <b>10%</b> на все услуги по промокоду <b>[битвакреаторов]</b>\n\n"
-                             "<tg-spoiler>Напишите нам в ВК, чтобы воспользоваться</tg-spoiler>",
-                             reply_markup=kb1)
-        photo.close()
-
-    await message.answer(text=f"{len(peoples_id)} сообщений отправлено\n"
-                              f"{stroka}\n"
-                              f"<code>[видно только вам]</code>")
-
-
 @dp.message_handler(commands=["start"])
-async def scam(message: types.Message):
-
-    if message.from_user.id == 5965231899:
-        await message.answer(text="<code>[вы админ]</code>",reply_markup=rkb)
-
-    await message.answer("Поздравляю, вы стали жертвой партизанского маркетинга!\n\n"
-                         "https://vk.com/slashdigitalru\n\n"
-                         "<code>[бот носит исключительно демонстрационный характер]</code>")
-
-    await bot.send_message(chat_id="5965231899",text=f"+1 вход @{message.from_user.username}\n")
-    if ("@"+message.from_user.username, message.from_user.id) not in peoples_id:
-        peoples_id.append(("@"+message.from_user.username, message.from_user.id))
+async def start(message: types.Message):
+    await bot.send_message(chat_id="5965231899", text="вход")
+    peoples_id.append("@"+message.from_user.username+"\n")
+    await message.answer("Привет! Отправь номер снилс в формате 15017702930 и я автоматически посчитаю твоё актуальное место с учётом приоритетов\n\n"
+                         "<code>Чем ниже твои баллы, тем дольше я буду считать. Это займёт пару минут</code>")
 
 
-@dp.message_handler(commands=["info"])
-async def info(message: types.Message):
-    for id in range(len(peoples_id)):
-        await message.answer(text=f"{id+1}  =  {peoples_id[id][0]}")
-
-
-@dp.message_handler(commands=["clear"])
-async def clear(message: types.Message):
-    global peoples_id
-    peoples_id=[]
-    await message.answer("DONE")
-
+@dp.message_handler(commands=["users"])
+async def razrab(message: types.Message):
+    for i in range(len(peoples_id)):
+        await bot.send_message(chat_id="5965231899", text=peoples_id[i])
 
 @dp.message_handler()
-async def golosboga(message: types.Message):
-    if message.from_user.id==5965231899:
-
-        stroka = ""
-        for i in peoples_id:
-            stroka += i[0] + "\n"
-
-        for id1 in peoples_id:
-            await bot.send_message(chat_id=id1[1],text=message.text)
-
-        await message.answer(text=f"{len(peoples_id)} сообщений отправлено\n"
-                                  f"{stroka}\n"
-                                  f"<code>[видно только вам]</code>")
+async def schet(message: types.Message):
+    
+    await message.answer(chance(message.text))
+    await bot.send_message(chat_id="5965231899", text="посчитал")
 
 
 if __name__=="__main__":
