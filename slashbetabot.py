@@ -25,9 +25,13 @@ async def razrab(message: types.Message):
 
 @dp.message_handler()
 async def schet(message: types.Message):
-    
-    await message.answer(chance(message.text))
-    await bot.send_message(chat_id="5965231899", text="посчитал")
+    if len(message.text)==11:
+        await message.answer("ща посчитаю")
+        await message.answer(chance(message.text))
+        await bot.send_message(chat_id="5965231899", text=f"посчитал, @{message.from_user.id}\n{message.text}")
+    else:
+        await message.answer("ты что-то не то ввёл, давай ещё раз")
+        await bot.send_message(chat_id="5965231899", text=f"ошибка: {message.text}")
 
 
 if __name__=="__main__":
