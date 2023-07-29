@@ -58,9 +58,9 @@ def chance(snils):
                 otvet+="Люди передо мной, которые гарантированно поступят не сюда: " + str(kolvopidorov) + "\n"
                 itog=mymesto-kolvopidorov
                 if itog<=int(name.split()[-1]):
-                    otvet+=f"Итоговое место: {itog} - <b>Точно поступил</b>✅"+"\n"
+                    otvet+=f"<b>Итоговое место:</b> {itog} - <b>Точно поступил</b>✅"+"\n"
                 else:
-                    otvet+=f"Итоговое место: {itog} - Пока не поступил "+"\n"
+                    otvet+=f"<b>Итоговое место:</b> {itog} - Пока не поступил "+"\n"
                 otvet+="------------------------"+"\n"
                 otvet+="\n"
                 nadoli=True
