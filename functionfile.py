@@ -30,6 +30,7 @@ def chance(snils):
     kolvopidorov=0
     pidor=[]
     napr=0
+    origa=0
     for i in f:
         s+=1
         if fnmatch(i[0][:8],"??.??.??")==True:
@@ -38,6 +39,7 @@ def chance(snils):
             lohi=0
             nadoli=False
             pidor=[]
+            origa=0
             kolvopidorov=0
 
         else:
@@ -48,6 +50,7 @@ def chance(snils):
                 otvet+="моё место: " + i[0]+"\n"
                 mymesto=int(i[0])
                 otvet+="людей с первым приоритетом передо мной: " + str(priority) +"\n"
+                otvet+="людей с оригиналом передо мной: " + str(origa) +"\n"
                 for i in pidor:
                     if garant(i[0],i[1])==True:
                         kolvopidorov+=1
@@ -66,5 +69,7 @@ def chance(snils):
             else:
                 if i[13]=="1":
                     priority+=1
+                if i[12]=="Есть":
+                    origa+=1
                 pidor.append((i[1],i[-3]))
     return(otvet)
