@@ -1,1 +1,1 @@
-worker: python slashbetabot.py
+worker: python slashdigitalbot.py
