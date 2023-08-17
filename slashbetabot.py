@@ -1226,8 +1226,7 @@ async def send_msg2(message: types.Message, state: FSMContext):
 async def menu(message: types.Message):
     if message.text=="🔗главное меню":
         await start(message)
-    if message.text=="msg":
-        await send_msg(message)
+    
     if message.from_user.id==admin:
         if message.text=="users":
             await create_file()
@@ -1242,6 +1241,9 @@ async def menu(message: types.Message):
         elif message.text=="reklama":
             await message.delete()
             await reklama(message)
+
+        elif message.text == "msg":
+            await send_msg(message)
 
         else:
             for i in id_base:
