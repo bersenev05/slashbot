@@ -17,6 +17,8 @@ storage=MemoryStorage()
 "6233960605:AAFiiu2k_HZFN27vFvbZ8ITCtNcxRzFcxRA"
 "5952524685:AAHamVB4b9BSG_GefeR5hQXpMPqIpRmEYwM"
 
+
+
 admin=5965231899
 bot=Bot(token="5856871549:AAFtXMLTLmtFMeZt57-wrsZHqhCEY8xz-LM",parse_mode="HTML")
 dp=Dispatcher(bot,storage=MemoryStorage())
@@ -1221,12 +1223,103 @@ async def send_msg2(message: types.Message, state: FSMContext):
 
 
 
+class PersonalReklama(StatesGroup):
+    reklama_text=State()
+    reklama_id=State()
+    reklama_photo=State()
+
+async def personal_reklama(message: types.Message):
+
+    await bot.delete_message(chat_id=message.from_user.id, message_id=last_msg_base[str(message.from_user.id)])
+
+    msg=await bot.send_message(chat_id=message.from_user.id, text="Отправь текст сообщения")
+    last_msg_base[str(message.from_user.id)] = str(msg.message_id)
+
+    await PersonalReklama.reklama_text.set()
+
+@dp.message_handler(state=PersonalReklama.reklama_text)
+async def personal_id(message: types.Message,state:FSMContext):
+
+    await bot.delete_message(chat_id=message.from_user.id, message_id=last_msg_base[str(message.from_user.id)])
+    await state.update_data(text=message.text)
+    msg=await bot.send_message(chat_id=message.from_user.id, text="Отправь id получателя")
+    last_msg_base[str(message.from_user.id)] = str(msg.message_id)
+
+    await PersonalReklama.reklama_id.set()
+
+@dp.message_handler(state=PersonalReklama.reklama_id)
+async def reklama_text(message: types.Message,state: FSMContext):
+    await bot.delete_message(chat_id=message.from_user.id, message_id=last_msg_base[str(message.from_user.id)])
+    await message.delete()
+    await state.update_data(id=message.text)
+
+    msg = await bot.send_message(chat_id=message.from_user.id, text="Скинь фото файлом")
+    last_msg_base[str(message.from_user.id)] = str(msg.message_id)
+
+    await PersonalReklama.reklama_photo.set()
+
+personal_reklama_base=["","photo.png",""]
+@dp.message_handler(state=PersonalReklama.reklama_photo,content_types=ContentType.DOCUMENT)
+async def reklama_text(message: types.Message, state: FSMContext):
+    await bot.delete_message(chat_id=message.from_user.id, message_id=last_msg_base[str(message.from_user.id)])
+    await message.delete()
+
+    await message.document.download(destination_file=Path(dir_path, "photo.png"))
+
+    await state.update_data(photo_place=Path(dir_path, "photo.png"))
+
+    data = await state.get_data()
+    await state.finish()
+    personal_reklama_base[2]=data["id"]
+    personal_reklama_base[0]=str(data["text"])
+    photo=open(data["photo_place"],"rb")
+    ikb=InlineKeyboardMarkup()
+    btn1=InlineKeyboardButton(f"Отправить {data['id']}",callback_data="send_reklama_personal")
+    btn2=InlineKeyboardButton("Заново",callback_data="repeat_reklama_personal")
+    ikb.add(btn1).row(btn2)
+
+    msg = await bot.send_photo(chat_id=message.from_user.id,
+                               photo=photo,
+                               caption=data["text"],
+                               reply_markup=ikb)
+
+    last_msg_base[str(message.from_user.id)] = str(msg.message_id)
+
+@dp.callback_query_handler(text="repeat_reklama_personal")
+async def repeat_reklama(message: types.Message):
+    await bot.delete_message(chat_id=message.from_user.id, message_id=last_msg_base[str(message.from_user.id)])
+    msg = await bot.send_message(chat_id=admin,text="работаю сэр")
+    last_msg_base[str(message.from_user.id)] = str(msg.message_id)
+    await personal_reklama(message)
+
+@dp.callback_query_handler(text="send_reklama_personal")
+async def send_reklama(message: types.Message):
+
+    ikb = InlineKeyboardMarkup()
+    btn1=InlineKeyboardButton("🫀 Наши услуги", callback_data="uslugi")
+    btn4 = InlineKeyboardButton('🧮 Рассчитать стоимость', callback_data="price")
+    btn3 = InlineKeyboardButton("🗺 Главное меню", callback_data="mainmenu")
+    ikb.row(btn1).row(btn4).row(btn3)
+
+    if str(personal_reklama_base[2]) in last_msg_base:
+        await bot.delete_message(chat_id=personal_reklama_base[2], message_id=last_msg_base[str(personal_reklama_base[2])])
+
+    msg = await bot.send_photo(chat_id=str(personal_reklama_base[2]),
+                                photo=open(reklama_base[1], "rb"),
+                                caption=personal_reklama_base[0],
+                                reply_markup=ikb)
+    last_msg_base[str(personal_reklama_base[2])] = str(msg.message_id)
+
+
+    await statisticbot.send_message(chat_id=admin,
+                                    text="Реклама отправлена")
+
 #ТЕКСТОВЫЕ КОМАНДЫ
 @dp.message_handler()
 async def menu(message: types.Message):
     if message.text=="🔗главное меню":
         await start(message)
-    
+
     if message.from_user.id==admin:
         if message.text=="users":
             await create_file()
@@ -1244,6 +1337,9 @@ async def menu(message: types.Message):
 
         elif message.text == "msg":
             await send_msg(message)
+
+        elif message.text=="personal":
+            await personal_reklama(message)
 
         else:
             for i in id_base:
