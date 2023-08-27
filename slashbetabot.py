@@ -10,6 +10,7 @@ from uslugi import uslugi_base
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
+import random
 
 #МАШИНА СОСТОЯНИЙ
 storage=MemoryStorage()
