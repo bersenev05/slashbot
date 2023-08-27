@@ -1313,44 +1313,6 @@ async def send_reklama(message: types.Message):
 
     await statisticbot.send_message(chat_id=admin,
                                     text="Реклама отправлена")
-
-#ТЕКСТОВЫЕ КОМАНДЫ
-@dp.message_handler()
-async def menu(message: types.Message):
-    if message.text=="🔗главное меню":
-        await start(message)
-
-    if message.from_user.id==admin:
-        if message.text=="users":
-            await create_file()
-            await statisticbot.send_document(chat_id=admin, document=open("idfile.txt", "rb"))
-            await statisticbot.send_document(chat_id=admin, document=open("userfile.txt", "rb"))
-
-        elif message.text=="cjm":
-            await message.delete()
-            await get_put()
-            await statisticbot.send_document(chat_id=admin, document=open("cjm.txt", "rb"))
-
-        elif message.text=="reklama":
-            await message.delete()
-            await reklama(message)
-
-        elif message.text == "msg":
-            await send_msg(message)
-
-        elif message.text=="personal":
-            await personal_reklama(message)
-
-        else:
-            for i in id_base:
-                await bot.send_message(chat_id=i,text=message.text)
-            await statisticbot.send_message(chat_id=admin,text=f"Сообщение - {message.text} - отправлено {len(id_base)} людям")
-
-    else:
-        await statisticbot.send_message(chat_id=admin, text=f"<b>ошибка:</b> {message.text}\n"
-                                                                   f"<b>пользователь:</b> @{message.from_user.username}\n"
-                                                                   f"<b>айди:</b> <code>{message.from_user.id}</code>")
-
 kolvo=20
 bomb=[]
 buttons=[]
@@ -1445,6 +1407,45 @@ async def repeat(message: types.Message):
                                        reply_markup=ikb)
 
     id=msg.message_id
+    
+#ТЕКСТОВЫЕ КОМАНДЫ
+@dp.message_handler()
+async def menu(message: types.Message):
+    if message.text=="🔗главное меню":
+        await start(message)
+
+    if message.from_user.id==admin:
+        if message.text=="users":
+            await create_file()
+            await statisticbot.send_document(chat_id=admin, document=open("idfile.txt", "rb"))
+            await statisticbot.send_document(chat_id=admin, document=open("userfile.txt", "rb"))
+
+        elif message.text=="cjm":
+            await message.delete()
+            await get_put()
+            await statisticbot.send_document(chat_id=admin, document=open("cjm.txt", "rb"))
+
+        elif message.text=="reklama":
+            await message.delete()
+            await reklama(message)
+
+        elif message.text == "msg":
+            await send_msg(message)
+
+        elif message.text=="personal":
+            await personal_reklama(message)
+
+        else:
+            for i in id_base:
+                await bot.send_message(chat_id=i,text=message.text)
+            await statisticbot.send_message(chat_id=admin,text=f"Сообщение - {message.text} - отправлено {len(id_base)} людям")
+
+    else:
+        await statisticbot.send_message(chat_id=admin, text=f"<b>ошибка:</b> {message.text}\n"
+                                                                   f"<b>пользователь:</b> @{message.from_user.username}\n"
+                                                                   f"<b>айди:</b> <code>{message.from_user.id}</code>")
+
+
 
 
 if __name__=="__main__":
