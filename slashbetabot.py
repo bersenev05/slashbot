@@ -1351,6 +1351,101 @@ async def menu(message: types.Message):
                                                                    f"<b>пользователь:</b> @{message.from_user.username}\n"
                                                                    f"<b>айди:</b> <code>{message.from_user.id}</code>")
 
+kolvo=20
+bomb=[]
+buttons=[]
+handlers=[]
+id=0
+chat=0
+
+@dp.message_handler(commands=["play"])
+async def start(message: types.Message):
+
+    global chat
+    ikb=InlineKeyboardMarkup(row_width=5)
+    for i in range(kolvo):
+        buttons.append(InlineKeyboardButton("⚫", callback_data=str(i)))
+        handlers.append(str(i))
+        bomb.append(random.randrange(2))
+
+    ikb.add(*buttons)
+
+    photo=open(Path(dir_path, "saper.png"),"rb")
+    chat=message.chat.id
+    msg = await bot.send_photo(chat_id=chat,
+                               photo=photo,
+                               caption="На ком подорвётся, тот чмо ебаное",
+                               reply_markup=ikb)
+    photo.close()
+    global id
+    id=msg.message_id
+
+
+
+@dp.callback_query_handler(text=handlers)
+async def handler(message: types.CallbackQuery):
+    global bomb
+    global buttons
+    global handlers
+    global chat
+    await asyncio.sleep(0.5)
+    if bomb[int(message.data)]==1:
+        buttons[int(message.data)]=InlineKeyboardButton("💥", callback_data=str(message.data))
+
+        for i in range(kolvo):
+            if bomb[i]==1:
+                buttons[int(i)] = InlineKeyboardButton("💥", callback_data=str(i))
+            else:
+                buttons[int(i)] = InlineKeyboardButton("🟢", callback_data=str(i))
+
+        ikb = InlineKeyboardMarkup(row_width=5)
+        ikb.add(*buttons)
+        ikb.add(InlineKeyboardButton("Начать снова",callback_data="repeat"))
+        await bot.edit_message_caption(chat_id=chat,
+                                       message_id=id,
+                                       reply_markup=ikb,
+                                       caption=f"@{message.from_user.username} чмо ебаное((")
+
+        bomb = []
+        buttons = []
+        handlers = []
+
+
+    else:
+        buttons[int(message.data)] = InlineKeyboardButton("🟢", callback_data=str(message.data))
+        ikb = InlineKeyboardMarkup(row_width=5)
+        ikb.add(*buttons)
+
+        await bot.edit_message_caption(chat_id=chat,
+                                       message_id=id,
+                                       reply_markup=ikb,
+                                       caption="Идём дальше...")
+
+@dp.callback_query_handler(text="repeat")
+async def repeat(message: types.Message):
+    ikb=InlineKeyboardMarkup(row_width=5)
+    global bomb
+    global buttons
+    global handlers
+    global chat
+    await asyncio.sleep(0.5)
+    bomb = []
+    buttons = []
+    handlers = []
+    for i in range(kolvo):
+        buttons.append(InlineKeyboardButton("⚫", callback_data=str(i)))
+        handlers.append(str(i))
+        bomb.append(random.randrange(2))
+
+    ikb.add(*buttons)
+    global id
+    msg=await bot.edit_message_caption(chat_id=chat,
+                                       message_id=id,
+                                       caption="На ком подорвётся, тот чмо ебаное",
+                                       reply_markup=ikb)
+
+    id=msg.message_id
+
 
 if __name__=="__main__":
     executor.start_polling(dispatcher=dp,skip_updates=True)
